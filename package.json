@@ -1,0 +1,38 @@
+{
+  "name": "react-button-controller",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "react": "^17.0.1"
+  },
+  "peerDependencies": {
+    "react": "^17.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harihkh/react-button-controller.git"
+  },
+  "keywords": [
+    "react-button-handler",
+    "react",
+    "button",
+    "handling",
+    "react",
+    "back",
+    "handling",
+    "tv",
+    "apps",
+    "back",
+    "handling"
+  ],
+  "author": "harihkh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/harihkh/react-button-controller/issues"
+  },
+  "homepage": "https://github.com/harihkh/react-button-controller#readme"
+}
