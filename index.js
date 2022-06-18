@@ -1,14 +1,21 @@
 import { useEffect, useRef } from 'react';
-// import { isKeyBackButton } from '../utils/commonUtils';
 
 const callBackFunctions = {};
 let callBackIDStack = [];
 
-let backButtons = [];
+let backButtons = null;
+let element = document;
+let event = 'keypress';
 
-export const initialize = ({ keyCodes = []}) => backButtons = keyCodes;
+export const initialize = ({ keyCodes = [], element: elm = document, event: ev = 'keypress' }) => {
+    if(!backButtons) {
+        backButtons = keyCodes;
+    }
+    element = elm;
+    event = ev
+};
 
-const isKeyBackButton = (e) => backButtons.indexOf(e.keyCode) !== -1;
+const isKeyBackButton = (e) => (backButtons || []).indexOf(e.keyCode) !== -1;
 
 /* --------------------------------- NOTICE ------------------------------------
   The callBack function passed to backButtonController should return true if
@@ -91,10 +98,11 @@ const handleBackPress = (event) => {
   }
 };
 
-document.addEventListener('keydown', handleBackPress);
+export const enableBackButtonHandler = () => element.addEventListener(event, handleBackPress);
+enableBackButtonHandler();
 
 export const removeBackButtonHandler = () => {
-  document.removeEventListener('keydown', handleBackPress);
+  element.removeEventListener(event, handleBackPress);
 };
 
 const useBackButton = ({ callBack, rank = null, randomID: rID }) => {
