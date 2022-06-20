@@ -9,13 +9,6 @@ let backButtons = null;
 let element = document;
 let event = 'keypress';
 
-export const initialize = ({ keyCodes = [], element: elm = document, event: ev = 'keypress' }) => {
-    if(!backButtons) {
-        backButtons = keyCodes;
-    }
-    element = elm;
-    event = ev
-};
 
 const isKeyBackButton = (e) => (backButtons || []).indexOf(e.keyCode) !== -1;
 
@@ -101,7 +94,6 @@ const handleBackPress = (event) => {
 };
 
 export const enableBackButtonHandler = () => element.addEventListener(event, handleBackPress);
-enableBackButtonHandler();
 
 export const removeBackButtonHandler = () => {
   element.removeEventListener(event, handleBackPress);
@@ -116,4 +108,18 @@ const useBackButton = ({ callback, rank = null, randomID: rID }) => {
   });
   useEffect(() => () => { removeCallBack(randomID.current); }, []);
 };
+
+export const initialize = ({ keyCodes = [], element: elm = document, event: ev = 'keypress' }) => {
+  const initializeFunc = () => {
+    enableBackButtonHandler();
+    backButtons = keyCodes;
+    element = elm;
+    event = ev
+    return () => {
+      removeBackButtonHandler()
+    }
+  }
+  useEffect(initializeFunc, [])
+}
+
 export default useBackButton;
