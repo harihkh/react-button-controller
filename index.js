@@ -20,9 +20,9 @@ export const initialize = ({ keyCodes = [], element: elm = document, event: ev =
 const isKeyBackButton = (e) => (backButtons || []).indexOf(e.keyCode) !== -1;
 
 /* --------------------------------- NOTICE ------------------------------------
-  The callBack function passed to backButtonController should return true if
+  The callback function passed to backButtonController should return true if
   the propogation of function to be terminated at that level. By deafult it will
-  keep on progating through all callBack Functons registered.
+  keep on progating through all callback Functons registered.
   ------------------------------------------------------------------------------ */
 
 const getRandomIDArray = () => callBackIDStack.map((i) => i.randomID) || [];
@@ -60,7 +60,7 @@ const updateCallBackIDStackwithRank = (randomID, rank) => {
 
 /** ------------------------ */
 
-const addNewCallbackToStack = ({ randomID, callBack = () => {}, rank = null } = {}) => {
+const addNewCallbackToStack = ({ randomID, callback = () => {}, rank = null } = {}) => {
   if (getRandomIDArray().indexOf(randomID) === -1) {
     const lastCallbackIDStackItem = callBackIDStack[callBackIDStack.length - 1];
     if (rank && lastCallbackIDStackItem && lastCallbackIDStackItem.rank !== null) {
@@ -69,7 +69,7 @@ const addNewCallbackToStack = ({ randomID, callBack = () => {}, rank = null } = 
       callBackIDStack.push({ randomID, rank });
     }
   }
-  callBackFunctions[randomID] = callBack;
+  callBackFunctions[randomID] = callback;
 };
 
 const removeCallBack = (randomID) => {
@@ -107,11 +107,11 @@ export const removeBackButtonHandler = () => {
   element.removeEventListener(event, handleBackPress);
 };
 
-const useBackButton = ({ callBack, rank = null, randomID: rID }) => {
+const useBackButton = ({ callback, rank = null, randomID: rID }) => {
   const randomID = useRef(rID || Math.random());
   addNewCallbackToStack({
     randomID: randomID.current,
-    callBack,
+    callback,
     rank,
   });
   useEffect(() => () => { removeCallBack(randomID.current); }, []);
