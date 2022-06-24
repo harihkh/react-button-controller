@@ -1,20 +1,21 @@
-
-
 import { useEffect, useRef } from 'react';
+
+let backButtons = null;
+// let element = document;
+// let event = 'keypress';
 
 const callBackFunctions = {};
 let callBackIDStack = [];
 
-let backButtons = null;
-let element = document;
-let event = 'keypress';
+window.callBackFunctions = callBackFunctions;
+window.callBackIDStack = callBackIDStack;
 
 export const initialize = ({ keyCodes = [], element: elm = document, event: ev = 'keypress' }) => {
     if(!backButtons) {
         backButtons = keyCodes;
     }
-    element = elm;
-    event = ev
+    // element = elm;
+    // event = ev
 };
 
 const isKeyBackButton = (e) => (backButtons || []).indexOf(e.keyCode) !== -1;
@@ -69,6 +70,7 @@ const addNewCallbackToStack = ({ randomID, callBack = () => {}, rank = null } = 
       callBackIDStack.push({ randomID, rank });
     }
   }
+  console.log('@@addingtostack', randomID, callBack)
   callBackFunctions[randomID] = callBack;
 };
 
@@ -89,31 +91,49 @@ const executeBackPressFunctionality = (parentLevel = 0) => {
   const backFunction = callBackFunctions[callBackFunctionKey];
   let stopPropogation = false;
   if (backFunction && typeof backFunction === 'function') {
+    console.log('## EBBF - Current', backFunction)
     stopPropogation = backFunction();
-    if (!(stopPropogation === true)) executeBackPressFunctionality(parentLevel + 1);
+    if (!(stopPropogation === true)) {
+        console.log('## EBBF - Next')
+        executeBackPressFunctionality(parentLevel + 1)
+    };
   }
 };
 
 const handleBackPress = (event) => {
-  if (isKeyBackButton(event)) {
+    console.log('## Handling back press BEOFER: ', event)
+    if (isKeyBackButton(event)) {
+      console.log('## Handling back press AFTER: ', event)
     executeBackPressFunctionality();
   }
 };
 
-export const enableBackButtonHandler = () => element.addEventListener(event, handleBackPress);
-enableBackButtonHandler();
+console.log('#### Adding eventlistner')
+document.addEventListener('keydown', handleBackPress);
 
 export const removeBackButtonHandler = () => {
-  element.removeEventListener(event, handleBackPress);
+  document.removeEventListener('keydown', handleBackPress);
 };
+
+export const useInitialize = (prop) => {
+  const initFunc = () => {
+    console.log('### initializing package')
+
+    initialize(prop);
+    // enableBackButtonHandler();
+  }
+  useEffect(initFunc,[])
+}
 
 const useBackButton = ({ callBack, rank = null, randomID: rID }) => {
   const randomID = useRef(rID || Math.random());
+  console.log('@@randomID', randomID.current);
+  console.log('Adding New Callback function', randomID)
   addNewCallbackToStack({
     randomID: randomID.current,
     callBack,
     rank,
   });
-  useEffect(() => () => { removeCallBack(randomID.current); }, []);
+  useEffect(() => () => { removeCallBack(randomID.current); console.log('## unmounting a componenet') }, []);
 };
 export default useBackButton;
