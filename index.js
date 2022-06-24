@@ -14,9 +14,9 @@ export const initialize = ({ keyCodes = [] }) => {
 const isListeningKey = (e) => (buttonKeyCdes || []).indexOf(e.keyCode) !== -1;
 
 /* --------------------------------- NOTICE ------------------------------------
-  The callBack function passed to useButtonController should return false if
+  The callback function passed to useButtonController should return false if
   the propogation of function to be terminated at that level. By deafult it will
-  keep on progating through all callBack Functons registered.
+  keep on progating through all callback Functons registered.
    (just like the event.stopPropogation in JS)
   ------------------------------------------------------------------------------ */
 
@@ -55,7 +55,7 @@ const updateCallBackIDStackwithRank = (randomID, rank) => {
 
 /** ------------------------ */
 
-const addNewCallbackToStack = ({ randomID, callBack = () => {}, rank = null } = {}) => {
+const addNewCallbackToStack = ({ randomID, callback = () => {}, rank = null } = {}) => {
   if (getRandomIDArray().indexOf(randomID) === -1) {
     const lastCallbackIDStackItem = callBackIDStack[callBackIDStack.length - 1];
     if (rank && lastCallbackIDStackItem && lastCallbackIDStackItem.rank !== null) {
@@ -64,7 +64,7 @@ const addNewCallbackToStack = ({ randomID, callBack = () => {}, rank = null } = 
       callBackIDStack.push({ randomID, rank });
     }
   }
-  callBackFunctions[randomID] = callBack;
+  callBackFunctions[randomID] = callback;
 };
 
 const removeCallBack = (randomID) => {
@@ -114,11 +114,11 @@ export const useInitialize = (prop) => {
   useEffect(initFunc,[])
 }
 
-const useButtonController = ({ callBack, rank = null, randomID: rID }) => {
+const useButtonController = ({ callback: callback, rank = null, randomID: rID }) => {
   const randomID = useRef(rID || Math.random());
   addNewCallbackToStack({
     randomID: randomID.current,
-    callBack,
+    callback: callback,
     rank,
   });
   useEffect(() => () => { removeCallBack(randomID.current) }, []);
