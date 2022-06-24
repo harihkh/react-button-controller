@@ -1,29 +1,23 @@
 import { useEffect, useRef } from 'react';
 
-let backButtons = null;
-// let element = document;
-// let event = 'keypress';
+let buttonKeyCdes = null;
 
 const callBackFunctions = {};
 let callBackIDStack = [];
 
-window.callBackFunctions = callBackFunctions;
-window.callBackIDStack = callBackIDStack;
-
-export const initialize = ({ keyCodes = [], element: elm = document, event: ev = 'keypress' }) => {
-    if(!backButtons) {
-        backButtons = keyCodes;
+export const initialize = ({ keyCodes = [] }) => {
+    if(!buttonKeyCdes) {
+        buttonKeyCdes = keyCodes;
     }
-    // element = elm;
-    // event = ev
 };
 
-const isKeyBackButton = (e) => (backButtons || []).indexOf(e.keyCode) !== -1;
+const isListeningKey = (e) => (buttonKeyCdes || []).indexOf(e.keyCode) !== -1;
 
 /* --------------------------------- NOTICE ------------------------------------
-  The callBack function passed to backButtonController should return true if
+  The callBack function passed to useButtonController should return false if
   the propogation of function to be terminated at that level. By deafult it will
   keep on progating through all callBack Functons registered.
+   (just like the event.stopPropogation in JS)
   ------------------------------------------------------------------------------ */
 
 const getRandomIDArray = () => callBackIDStack.map((i) => i.randomID) || [];
@@ -70,7 +64,6 @@ const addNewCallbackToStack = ({ randomID, callBack = () => {}, rank = null } = 
       callBackIDStack.push({ randomID, rank });
     }
   }
-  console.log('@@addingtostack', randomID, callBack)
   callBackFunctions[randomID] = callBack;
 };
 
@@ -85,55 +78,49 @@ const removeCallBack = (randomID) => {
   }
 };
 
-const executeBackPressFunctionality = (parentLevel = 0) => {
+const executeKeyPressFunctionality = (parentLevel = 0) => {
   const index = getRandomIDArray().length - (parentLevel + 1);
   const callBackFunctionKey = callBackIDStack[index] && callBackIDStack[index].randomID;
-  const backFunction = callBackFunctions[callBackFunctionKey];
+  const keyCallbackFunction = callBackFunctions[callBackFunctionKey];
   let stopPropogation = false;
-  if (backFunction && typeof backFunction === 'function') {
-    console.log('## EBBF - Current', backFunction)
-    stopPropogation = backFunction();
-    if (!(stopPropogation === true)) {
-        console.log('## EBBF - Next')
-        executeBackPressFunctionality(parentLevel + 1)
+  if (keyCallbackFunction && typeof keyCallbackFunction === 'function') {
+    stopPropogation = keyCallbackFunction();
+    if (stopPropogation === true) {
+        executeKeyPressFunctionality(parentLevel + 1)
     };
   }
 };
 
-const handleBackPress = (event) => {
-    console.log('## Handling back press BEOFER: ', event)
-    if (isKeyBackButton(event)) {
-      console.log('## Handling back press AFTER: ', event)
-    executeBackPressFunctionality();
+const handleKeyPress = (event) => {
+    if (isListeningKey(event)) {
+    executeKeyPressFunctionality();
   }
 };
 
-console.log('#### Adding eventlistner')
-document.addEventListener('keydown', handleBackPress);
 
-export const removeBackButtonHandler = () => {
-  document.removeEventListener('keydown', handleBackPress);
+export const removeButtonHandler = () => {
+  document.removeEventListener('keydown', handleKeyPress);
 };
 
 export const useInitialize = (prop) => {
+  const { element = document, event = 'keydown' } = prop;
   const initFunc = () => {
-    console.log('### initializing package')
-
+    element.addEventListener(event, handleKeyPress);
     initialize(prop);
-    // enableBackButtonHandler();
+    return () => {
+      element.removeEventListener(event, handleKeyPress);
+    }
   }
   useEffect(initFunc,[])
 }
 
-const useBackButton = ({ callBack, rank = null, randomID: rID }) => {
+const useButtonController = ({ callBack, rank = null, randomID: rID }) => {
   const randomID = useRef(rID || Math.random());
-  console.log('@@randomID', randomID.current);
-  console.log('Adding New Callback function', randomID)
   addNewCallbackToStack({
     randomID: randomID.current,
     callBack,
     rank,
   });
-  useEffect(() => () => { removeCallBack(randomID.current); console.log('## unmounting a componenet') }, []);
+  useEffect(() => () => { removeCallBack(randomID.current) }, []);
 };
-export default useBackButton;
+export default useButtonController;
