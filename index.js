@@ -114,7 +114,7 @@ export const useInitialize = (prop) => {
   useEffect(initFunc,[])
 }
 
-const useButtonController = ({ callback: callback, rank = null, randomID: rID }) => {
+const useButtonController = ({ callback: callback, rank = null, id: rID }) => {
   const randomID = useRef(rID || Math.random());
   addNewCallbackToStack({
     randomID: randomID.current,
