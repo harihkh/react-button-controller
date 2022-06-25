@@ -85,7 +85,7 @@ const executeKeyPressFunctionality = (parentLevel = 0) => {
   let stopPropogation = false;
   if (keyCallbackFunction && typeof keyCallbackFunction === 'function') {
     stopPropogation = keyCallbackFunction();
-    if (stopPropogation === true) {
+    if (stopPropogation !== false) {
         executeKeyPressFunctionality(parentLevel + 1)
     };
   }
