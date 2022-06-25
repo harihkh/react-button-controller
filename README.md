@@ -68,7 +68,7 @@ Here is the code of adding controller to **App.jsx - for closing MainPopup.jsx**
 		    return  false;
 	    }
 	    
-	    useButton({ callback: handleEsc, randomID: 'app.js' });
+	    useButton({ callback: handleEsc, id: 'app.js' });
 	    
 	    return (<div  className="App">
 		    {showMainPopup  &&  <MainPopup  />}
@@ -95,7 +95,7 @@ Here is the code of adding controller to **App.jsx - for closing MainPopup.jsx**
 		    }
 	    };
 	    
-	    useButton({ callback: handleEsc, randomID: 'mainPopup'});
+	    useButton({ callback: handleEsc, id: 'mainPopup'});
 	    
 	    return(<div  className="mainpopup">
 		    --MainPopup--
