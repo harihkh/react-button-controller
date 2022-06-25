@@ -1,4 +1,4 @@
-**react-button-controller** is a lightweight, fully-featured ReactJS companion library for handing a particluar key(s) press globally throughout the app. Some typical use cases are,
+**react-button-controller** is a lightweight, fully-featured ReactJS package for handling a particluar key(s) press globally throughout the app. Some typical use cases are,
 
  - Handling back button press in case of TV apps.
  - Handling back button press in case of Webview mobile apps.
