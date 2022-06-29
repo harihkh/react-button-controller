@@ -124,3 +124,9 @@ const useButtonController = ({ callback: callback, rank = null, id: rID }) => {
   useEffect(() => () => { removeCallBack(randomID.current) }, []);
 };
 export default useButtonController;
+
+
+//TO-DO
+// Suport for debug
+// callback param keycode.
+// try-catch

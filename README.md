@@ -1,4 +1,4 @@
-**react-button-controller** is a lightweight, fully-featured ReactJS package for handling a particluar key(s) press globally throughout the app. Some typical use cases are,
+**react-button-controller** is a lightweight, fully-featured ReactJS package for handling a particular key(s) press globally throughout the app. Some typical use cases are,
 
  - Handling back button press in case of TV apps.
  - Handling back button press in case of Webview mobile apps.
@@ -12,7 +12,7 @@
 
     npm i react-button-controller
 ## Initialization
-The library need to be initialized with the keycodes for which the library need to listen for. Initialization can be done with the `useInitialize` hook. A typical place to do this is in the App.jsx of your react app. The hook accepts an obect as parameter with an array of `keyCodes` to listen for.
+The library needs to be initialized with the keycodes for which the library needs to listen for. Initialization can be done with the `useInitialize` hook. A typical place to do this is in the App.jsx of your react app. The hook accepts an obect as parameter with an array of `keyCodes` to listen for.
 
 Here is an exapmle of initializing the library for listening to **Esc key** press.
 
@@ -34,10 +34,10 @@ Here is an exapmle of initializing the library for listening to **Esc key** pres
 ## Using Controller in a Component
 The controller can be used in a react component using the `useButton` hook from the library. The hook accepts an object as parameter which contain the following properties.
 
- 1. `callback` : The callback function that will be executed when the key press is handled for that component.
+ 1. `callback` : The callback function will be executed when the key press is handled for that component.
  2. `id`: A unique ID passed to the controller. This need to be unique throughout the app.
 
-Whenever a component which has the controller is mounted, the library will add the callback to a call-stack. The addition to the call-stack is done in the order of the mounting of the components.
+Whenever a component which has the controller is mounted, the library will add the callback to a call-stack. The addition to the call-stack is done in the order of mounting of the components.
 When the configured button is pressed, By default all the callback functions are triggered in the last-in-first-out manner. 
 
 If you want to stop propogation of the action through the stack, `return false;` from the desired callback function. *(behaviour is similar to the event.stopPropogation() in JS)*.
